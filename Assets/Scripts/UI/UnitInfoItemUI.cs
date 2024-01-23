@@ -6,23 +6,27 @@ using TMPro;
 
 public class UnitInfoItemUI : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI textMeshPro;
-
-    private string infoName;
-    private int value;
+    [SerializeField] private TextMeshProUGUI textInfoName;
+    [SerializeField] private TextMeshProUGUI textValueSelectedUnit;
+    [SerializeField] private TextMeshProUGUI textValueTargetUnit;
 
     public void SetName(string infoName)
     {
-        this.infoName = infoName;
+        textInfoName.text = infoName;
     }
 
-    public void SetValue(int value)
+    public void SetValueSelectedUnit(string value)
     {
-        this.value = value;
+        textValueSelectedUnit.text = value;
     }
 
-    public void Update()
+    public void SetValueTargetUnit(string value)
     {
-        textMeshPro.text = infoName + " : " + value;
+        textValueTargetUnit.text = value;
+    }
+
+    public void RemoveValueTargetUnit()
+    {
+        textValueTargetUnit.text = "";
     }
 }

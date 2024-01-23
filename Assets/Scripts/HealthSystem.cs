@@ -5,15 +5,16 @@ using UnityEngine;
 
 public class HealthSystem : MonoBehaviour
 {
-    [SerializeField] private int health = 100;
+    private int health;
     private int healthMax;
 
     public event EventHandler OnDead;
     public event EventHandler OnDamaged;
 
-    private void Awake()
+    private void Start()
     {
-        healthMax = health;
+        healthMax = GetComponent<UnitInfo>().GetHP();
+        health = healthMax;
     }
 
     public void TakeDamage(int damageAmount)
@@ -30,6 +31,11 @@ public class HealthSystem : MonoBehaviour
     private void Die()
     {
         OnDead?.Invoke(this, EventArgs.Empty);
+    }
+
+    public int GetHealth()
+    {
+        return health;
     }
 
     public float GetHealthNormalized()

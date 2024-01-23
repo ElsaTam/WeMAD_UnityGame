@@ -39,12 +39,12 @@ public class InputManager : MonoBehaviour
 #endif
     }
 
-    public bool IsLeftMouseButtonDownThisFrame()
+    public bool IsLeftMouseButtonUpThisFrame()
     {
 #if USE_NEW_INPUT_SYSTEM
-        return playerInputActions.Player.LeftClick.WasPressedThisFrame();
+        return playerInputActions.Player.LeftClick.WasReleasedThisFrame();
 #else
-        return Input.GetMouseButtonDown(0);
+        return Input.GetMouseButtonUp(0);
 #endif
     }
 

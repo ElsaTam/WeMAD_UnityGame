@@ -12,11 +12,12 @@ public class Unit : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public static event EventHandler OnAnyUnitSpawned;
     public static event EventHandler OnAnyUnitDead;
 
-    public event EventHandler OnMouseEnter;
-    public event EventHandler OnMouseExit;
+    public static event EventHandler OnAnyMouseEnter;
+    public static event EventHandler OnAnyMouseExit;
 
 
     private UnitInfo unitInfo;
+    private IWeapon weapon;
 
     private BaseAction[] baseActionArray;
     private GridPosition gridPosition;
@@ -29,6 +30,24 @@ public class Unit : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         baseActionArray = GetComponents<BaseAction>();
         healthSystem = GetComponent<HealthSystem>();
         unitInfo = GetComponent<UnitInfo>();
+        switch (unitInfo.GetClass())
+        {
+            case UnitInfo.UnitClass.Brawler:
+                weapon = new WeaponHands();
+                break;
+            case UnitInfo.UnitClass.Fighter:
+                weapon = new WeaponSword();
+                break;
+            case UnitInfo.UnitClass.Pistolero:
+                weapon = new WeaponGun();
+                break;
+            case UnitInfo.UnitClass.Sniper:
+                weapon = new WeaponSniper();
+                break;
+            case UnitInfo.UnitClass.Mage:
+                weapon = new WeaponArtifact();
+                break;
+        }
         actionPoints = unitInfo.GetActionPointsMax();
     }
 
@@ -63,10 +82,26 @@ public class Unit : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         return null;
     }
 
-    public UnitInfo GetUnitInfo()
+    public BaseAction GetAttackAction()
     {
-        return unitInfo;
+        switch (weapon.GetType())
+        {
+            case IWeapon.WeaponTypes.Hands:
+                return GetAction<SwordAction>();
+            case IWeapon.WeaponTypes.Sword:
+                return GetAction<SwordAction>();
+            case IWeapon.WeaponTypes.Gun:
+                return GetAction<ShootAction>();
+            case IWeapon.WeaponTypes.Sniper:
+                return GetAction<ShootAction>();
+            case IWeapon.WeaponTypes.Artifact:
+                return GetAction<ShootAction>();
+        }
+        return null;
     }
+
+    public UnitInfo GetUnitInfo() => unitInfo;
+    public IWeapon GetWeapon() => weapon;
 
     public BaseAction[] GetBaseActionArray()
     {
@@ -118,6 +153,7 @@ public class Unit : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     }
 
     public float GetHealthNormalized() => healthSystem.GetHealthNormalized();
+    public int GetHealth() => healthSystem.GetHealth();
 
     public bool TrySpendActionPoint(BaseAction baseAction)
     {
@@ -163,12 +199,11 @@ public class Unit : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnPointerEnter(PointerEventData data)
     {
-        Debug.Log("Unit.OnPointerEnter");
-        OnMouseEnter?.Invoke(this, EventArgs.Empty);
+        OnAnyMouseEnter?.Invoke(this, EventArgs.Empty);
     }
     public void OnPointerExit(PointerEventData data)
     {
-        OnMouseExit?.Invoke(this, EventArgs.Empty);
+        OnAnyMouseExit?.Invoke(this, EventArgs.Empty);
     }
 
 }

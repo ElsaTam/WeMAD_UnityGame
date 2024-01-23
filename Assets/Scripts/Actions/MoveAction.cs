@@ -66,9 +66,9 @@ public class MoveAction : BaseAction
         UnitInfo unitInfo = unit.GetUnitInfo();
 
         GridPosition unitGridPosition = unit.GetGridPosition();
-        for (int x = -unitInfo.GetMaxMoveDistance(); x <= unitInfo.GetMaxMoveDistance(); ++x)
+        for (int x = -unitInfo.GetMovement(); x <= unitInfo.GetMovement(); ++x)
         {
-            for (int z = -unitInfo.GetMaxMoveDistance(); z <= unitInfo.GetMaxMoveDistance(); ++z)
+            for (int z = -unitInfo.GetMovement(); z <= unitInfo.GetMovement(); ++z)
             {
                 GridPosition gridPosition = unitGridPosition + new GridPosition(x, z);
 
@@ -77,7 +77,7 @@ public class MoveAction : BaseAction
                 if (LevelGrid.Instance.HasAnyUnitOnGridPosition(gridPosition))     continue;
                 if (! PathFinding.Instance.IsWalkableGridPosition(gridPosition))   continue;
                 float pathLength = PathFinding.Instance.GetPathLength(unitGridPosition, gridPosition);
-                if (pathLength <= 0 || pathLength > unitInfo.GetMaxMoveDistance()) continue;
+                if (pathLength <= 0 || pathLength > unitInfo.GetMovement()) continue;
                 
                 validActionGridPositionList.Add(gridPosition);
             }

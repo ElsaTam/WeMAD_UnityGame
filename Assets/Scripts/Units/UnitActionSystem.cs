@@ -40,18 +40,25 @@ public class UnitActionSystem : MonoBehaviour
 
     private void Update()
     {
-        if (isBusy) return;
-        if (! TurnSystem.Instance.IsPlayerTurn()) return; // Enemy turn
-        if (EventSystem.current.IsPointerOverGameObject()) return; // mouse on top of UI element
-        if (TryHandleUnitSelection()) return; // return if a unit was selected (don't move it)
+        if (InputManager.Instance.IsLeftMouseButtonUpThisFrame())
+        {
+            if (isBusy) return;
+            if (! TurnSystem.Instance.IsPlayerTurn()) return; // Enemy turn
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                if (UIInteraction.Instance.GetPointedGUIElementList().Count > 0) return;// mouse on top of UI element
+            }
+            if (TryHandleUnitSelection()) return; // return if a unit was selected (don't move it)
 
-        HandleSelectedAction();
+            HandleSelectedAction();
+        }
     }
 
     private bool TryHandleUnitSelection()
     {
-        if (InputManager.Instance.IsLeftMouseButtonDownThisFrame())
+        if (InputManager.Instance.IsLeftMouseButtonUpThisFrame())
         {
+
             Unit unit = GetPointedUnit(unitsLayerMask);
             if (unit)
             {
@@ -67,7 +74,7 @@ public class UnitActionSystem : MonoBehaviour
 
     private void HandleSelectedAction()
     {
-        if (InputManager.Instance.IsLeftMouseButtonDownThisFrame())
+        if (InputManager.Instance.IsLeftMouseButtonUpThisFrame())
         {
             // Select unit as target if it makes sense
             Unit targetUnit = null;
@@ -136,7 +143,6 @@ public class UnitActionSystem : MonoBehaviour
 
     private void ClearBusy()
     {
-        Debug.Log("Clear busy");
         isBusy = false;
         OnBusyChanged?.Invoke(this, isBusy); // only fire the event if we have subscribers
     }

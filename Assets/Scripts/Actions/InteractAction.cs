@@ -23,9 +23,9 @@ public class InteractAction : BaseAction
         List<GridPosition> validActionGridPositionList = new List<GridPosition>();
 
         UnitInfo unitInfo = unit.GetUnitInfo();
-        for (int x = -unitInfo.GetMaxInteractDistance(); x <= unitInfo.GetMaxInteractDistance(); ++x)
+        for (int x = -1; x <= 1; ++x)
         {
-            for (int z = -unitInfo.GetMaxInteractDistance(); z <= unitInfo.GetMaxInteractDistance(); ++z)
+            for (int z = -1; z <= 1; ++z)
             {
                 GridPosition testGridPosition = unit.GetGridPosition() + new GridPosition(x, z);
 
